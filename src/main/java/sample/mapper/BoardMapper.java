@@ -10,4 +10,6 @@ public interface BoardMapper {
 
     List<BoardDto> selectBoardList() throws Exception;
 
+    void insertBoard(BoardDto board) throws Exception;
+
 }

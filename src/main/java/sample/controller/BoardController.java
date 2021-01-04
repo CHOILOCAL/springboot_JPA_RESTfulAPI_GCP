@@ -26,6 +26,20 @@ public class BoardController {
 
         return mv;
     }
+    
+    // 게시판 저장 화면
+    @RequestMapping("/board/openBoardWrite.do")
+    public String openBoardWrite() throws Exception {
+        return "/board/boardWrite";
+    }
+    
+    // 게시판 저장 기능
+    @RequestMapping("/board/insertBoard.do")
+    public String insertBoard(BoardDto board) throws Exception {
+        boardService.insertBoard(board);
+        return "redirect:/board/openBoardList.do";
+    }
+
 
 
 }

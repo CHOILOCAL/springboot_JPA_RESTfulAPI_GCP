@@ -17,4 +17,23 @@
 		]]>
 	</select>
 
+	<insert id="insertBoard" parameterType="sample.dto.BoardDto">
+		<![CDATA[
+			INSERT INTO board
+			(
+			title,
+			contents,
+			created_datetime,
+			creator_id
+			)
+			VALUES
+			(
+			#{title},
+			#{contents},
+			NOW(),
+			'admin'
+			)
+		]]>
+	</insert>
+
 </mapper>
