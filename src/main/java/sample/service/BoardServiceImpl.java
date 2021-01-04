@@ -27,6 +27,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public BoardDto selectBoardDetail(int boardIdx) throws Exception {
+//        int i = 10 / 0;
         boardMapper.updateHitCount(boardIdx); // 조회수 증가
         BoardDto board = boardMapper.selectBoardDetail(boardIdx); // 게시판 상세 데이터
         return board;
