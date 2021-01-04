@@ -1,5 +1,6 @@
 package sample.common;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -9,18 +10,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @ControllerAdvice
+@Slf4j
 public class ExceptionHandler {
 
-    private Logger log = LoggerFactory.getLogger(this.getClass());
-
     @org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
-     public ModelAndView defaultExceptionHandler(HttpServletRequest request, Exception exception) {
+    public ModelAndView defaultExceptionHandler(HttpServletRequest request, Exception exception){
+        ModelAndView mv = new ModelAndView("/error/error_default");
+        mv.addObject("exception", exception);
 
-         ModelAndView mv = new ModelAndView("/error/error_default.html");
-         mv.addObject("exception", exception);
+        log.error("defaultExceptionHandler", exception);
 
-         log.error("exception", exception);
-
-         return mv;
-     }
+        return mv;
+    }
 }

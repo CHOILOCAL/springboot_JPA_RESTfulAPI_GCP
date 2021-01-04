@@ -17,7 +17,7 @@
 		]]>
 	</select>
 
-	<insert id="insertBoard" parameterType="sample.dto.BoardDto">
+	<insert id="insertBoard" parameterType="sample.dto.BoardDto" useGeneratedKeys="true" keyProperty="boardIdx">
 		<![CDATA[
 			INSERT INTO board
 			(
@@ -86,5 +86,30 @@
 				board_idx = #{boardIdx}
 		]]>
 	</update>
+
+	<insert id="insertBoardFileList" parameterType="sample.dto.BoardFileDto">
+		<![CDATA[
+			INSERT INTO file
+			(
+				board_idx,
+				original_file_name,
+				stored_file_path,
+				file_size,
+				creator_id,
+				created_datetime
+			)
+			VALUES
+		]]>
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.boardIdx},
+			#{item.originalFileName},
+			#{item.storedFilePath},
+			#{item.fileSize},
+			'admin',
+			NOW()
+			)
+		</foreach>
+	</insert>
 
 </mapper>
