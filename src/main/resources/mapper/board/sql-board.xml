@@ -36,4 +36,32 @@
 		]]>
 	</insert>
 
+	<update id="updateHitCount" parameterType="int">
+		<![CDATA[
+			UPDATE
+			board
+			SET
+			hit_cnt = hit_cnt + 1
+			WHERE
+			board_idx = #{board_idx}
+		]]>
+	</update>
+
+	<select id="selectBoardDetail" parameterType="int" resultType="sample.dto.BoardDto">
+		<![CDATA[
+			SELECT
+				board_idx,
+				title,
+				contents,
+				hit_cnt,
+				DATE_FORMAT(created_datetime, '%Y.%m.%d %H:%i:%s') AS created_datetime,
+				creator_id
+			FROM
+				board
+			WHERE
+				board_idx = #{boardIdx}
+				AND deleted_yn = 'N'
+		]]>
+	</select>
+
 </mapper>

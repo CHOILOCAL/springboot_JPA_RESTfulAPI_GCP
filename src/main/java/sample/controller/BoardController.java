@@ -3,6 +3,7 @@ package sample.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import sample.dto.BoardDto;
 import sample.service.BoardService;
@@ -39,6 +40,22 @@ public class BoardController {
         boardService.insertBoard(board);
         return "redirect:/board/openBoardList.do";
     }
+    
+    // 게시글 상세 조회 기능
+    @RequestMapping("/board/openBoardDetail.do")
+    public ModelAndView openBoardDetail(@RequestParam int boardIdx) throws Exception {
+
+        ModelAndView mv = new ModelAndView("/board/boardDetail"); // template
+
+        BoardDto board = boardService.selectBoardDetail(boardIdx);
+        mv.addObject("board", board);
+
+        return mv;
+    }
+
+    // 조회수 증가
+    
+    // 게시글 삭제
 
 
 
