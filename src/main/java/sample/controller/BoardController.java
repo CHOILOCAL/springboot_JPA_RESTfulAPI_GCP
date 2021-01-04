@@ -15,6 +15,7 @@ public class BoardController {
     @Autowired
     private BoardService boardService;
 
+    // 게시판 조회
     @RequestMapping("/board/openBoardList.do")
     public ModelAndView openBoardList() throws Exception {
 
@@ -25,4 +26,6 @@ public class BoardController {
 
         return mv;
     }
+
+
 }
