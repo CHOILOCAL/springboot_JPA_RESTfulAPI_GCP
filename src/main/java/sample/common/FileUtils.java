@@ -17,6 +17,7 @@ import java.util.List;
 public class FileUtils {
 
     public List<BoardFileDto> parseFileInfo(int boardIdx, MultipartHttpServletRequest multipartHttpServletRequest) throws Exception{
+
         if(ObjectUtils.isEmpty(multipartHttpServletRequest)){
             return null;
         }
@@ -59,6 +60,7 @@ public class FileUtils {
                     }
 
                     newFileName = Long.toString(System.nanoTime()) + originalFileExtension;
+
                     BoardFileDto boardFile = new BoardFileDto();
                     boardFile.setBoardIdx(boardIdx);
                     boardFile.setFileSize(multipartFile.getSize());

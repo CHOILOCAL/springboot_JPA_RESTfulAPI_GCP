@@ -19,6 +19,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
         registry.addInterceptor(new LoggerInterceptor());
     }
 
+    // 파일 처리를 위한 빈
     @Bean
     public CommonsMultipartResolver multipartResolver() {
         CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
@@ -27,4 +28,6 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 
         return commonsMultipartResolver;
     }
+
+
 }

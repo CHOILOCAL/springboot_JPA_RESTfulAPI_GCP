@@ -1,32 +1,31 @@
 package sample.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import sample.dto.BoardDto;
+import sample.dto.BoardFileDto;
 import sample.service.BoardService;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.net.URLEncoder;
 import java.util.List;
 
-@Slf4j
 @Controller
 public class BoardController {
 
     @Autowired
     private BoardService boardService;
 
-    // 게시판 조회
     @RequestMapping("/board/openBoardList.do")
-    public ModelAndView openBoardList() throws Exception {
-
-        log.debug("openBoardList");
-
+    public ModelAndView openBoardList() throws Exception{
         ModelAndView mv = new ModelAndView("/board/boardList");
 
         List<BoardDto> list = boardService.selectBoardList();
@@ -34,47 +33,56 @@ public class BoardController {
 
         return mv;
     }
-    
-    // 게시판 저장 화면
+
     @RequestMapping("/board/openBoardWrite.do")
-    public String openBoardWrite() throws Exception {
+    public String openBoardWrite() throws Exception{
         return "/board/boardWrite";
     }
-    
-    // 게시판 저장 기능
+
     @RequestMapping("/board/insertBoard.do")
-    public String insertBoard(BoardDto board, MultipartHttpServletRequest multipartHttpServletRequest) throws Exception {
+    public String insertBoard(BoardDto board, MultipartHttpServletRequest multipartHttpServletRequest) throws Exception{
         boardService.insertBoard(board, multipartHttpServletRequest);
         return "redirect:/board/openBoardList.do";
     }
-    
-    // 게시글 상세 조회 기능
-    @RequestMapping("/board/openBoardDetail.do")
-    public ModelAndView openBoardDetail(@RequestParam int boardIdx) throws Exception {
 
-        ModelAndView mv = new ModelAndView("/board/boardDetail"); // template
+    @RequestMapping("/board/openBoardDetail.do")
+    public ModelAndView openBoardDetail(@RequestParam int boardIdx) throws Exception{
+        ModelAndView mv = new ModelAndView("/board/boardDetail");
 
         BoardDto board = boardService.selectBoardDetail(boardIdx);
         mv.addObject("board", board);
 
         return mv;
     }
-    
-    // 게시글 수정
+
     @RequestMapping("/board/updateBoard.do")
-    public String updateBoard(BoardDto board) throws Exception {
+    public String updateBoard(BoardDto board) throws Exception{
         boardService.updateBoard(board);
         return "redirect:/board/openBoardList.do";
     }
 
-
-    // 게시글 삭제
     @RequestMapping("/board/deleteBoard.do")
-    public String deleteBoard(int boardIdx) throws Exception {
+    public String deleteBoard(int boardIdx) throws Exception{
         boardService.deleteBoard(boardIdx);
         return "redirect:/board/openBoardList.do";
     }
 
+    @RequestMapping("/board/downloadBoardFile.do")
+    public void downloadBoardFile(@RequestParam int idx, @RequestParam int boardIdx, HttpServletResponse response) throws Exception{
+        BoardFileDto boardFile = boardService.selectBoardFileInformation(idx, boardIdx);
+        if(ObjectUtils.isEmpty(boardFile) == false) {
+            String fileName = boardFile.getOriginalFileName();
 
+            byte[] files = FileUtils.readFileToByteArray(new File(boardFile.getStoredFilePath()));
 
+            response.setContentType("application/octet-stream");
+            response.setContentLength(files.length);
+            response.setHeader("Content-Disposition", "attachment; fileName=\"" + URLEncoder.encode(fileName,"UTF-8")+"\";");
+            response.setHeader("Content-Transfer-Encoding", "binary");
+
+            response.getOutputStream().write(files);
+            response.getOutputStream().flush();
+            response.getOutputStream().close();
+        }
+    }
 }

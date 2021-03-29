@@ -42,6 +42,12 @@
             </tbody>
         </table>
         <input type="hidden" id="boardIdx" name="boardIdx" th:value="${board.boardIdx }">
+
+        <div class="file_list">
+            <a th:each="list : ${board.fileList}"
+               th:href="@{/board/downloadBoardFile.do(idx=${list.idx}, boardIdx=${list.boardIdx})}" th:text="|${list.originalFileName} (${list.fileSize} kb)|"></a>
+        </div>
+
     </form>
 
     <a href="#this" id="list" class="btn">목록으로</a>

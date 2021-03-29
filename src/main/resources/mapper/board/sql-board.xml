@@ -89,7 +89,7 @@
 
 	<insert id="insertBoardFileList" parameterType="sample.dto.BoardFileDto">
 		<![CDATA[
-			INSERT INTO file
+			INSERT INTO t_file
 			(
 				board_idx,
 				original_file_name,
@@ -111,5 +111,22 @@
 			)
 		</foreach>
 	</insert>
+
+	<select id="selectBoardFileList" parameterType="int"
+			resultType="sample.dto.BoardFileDto">
+		<![CDATA[
+SELECT idx,board_idx,original_file_name, idx, board_idx, original_file_name, FORMAT(ROUND(file_size / 1024), 0) AS file_size
+FROM t_file
+WHERE board_idx = #{boardIdx} and deleted_yn = 'N'
+		]]>
+	</select>
+
+	<select id="selectBoardFileInformation" parameterType="map" resultType="sample.dto.BoardFileDto">
+		<![CDATA[
+SELECT original_file_name, stored_file_path, file_size
+FROM t_file
+WHERE idx = #{idx} and board_idx = #{boardIdx} and deleted_yn = 'N'
+		]]>
+	</select>
 
 </mapper>

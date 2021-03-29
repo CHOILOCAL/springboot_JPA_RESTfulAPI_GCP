@@ -16,10 +16,8 @@ import sample.mapper.BoardMapper;
 import java.util.Iterator;
 import java.util.List;
 
-@Slf4j
 @Service
-@Transactional
-public class BoardServiceImpl implements BoardService {
+public class BoardServiceImpl implements BoardService{
 
     @Autowired
     private BoardMapper boardMapper;
@@ -34,36 +32,21 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public void insertBoard(BoardDto board, MultipartHttpServletRequest multipartHttpServletRequest) throws Exception {
-
         boardMapper.insertBoard(board);
         List<BoardFileDto> list = fileUtils.parseFileInfo(board.getBoardIdx(), multipartHttpServletRequest);
         if(CollectionUtils.isEmpty(list) == false){
             boardMapper.insertBoardFileList(list);
         }
-
-//        if (ObjectUtils.isEmpty(multipartHttpServletRequest) == false) {
-//            Iterator<String> iterator = multipartHttpServletRequest.getFileNames();
-//            String name;
-//            while (iterator.hasNext()) {
-//                name = iterator.next();
-//                log.debug("file tag name : " + name);
-//                List<MultipartFile> list = multipartHttpServletRequest.getFiles(name);
-//                for (MultipartFile multipartFile : list) {
-//                    log.debug("start file information");
-//                    log.debug("file name : " + multipartFile.getOriginalFilename());
-//                    log.debug("file size : " + multipartFile.getSize());
-//                    log.debug("file content type : " + multipartFile.getContentType());
-//                    log.debug("end file information. \n");
-//                }
-//            }
-//        }
     }
 
     @Override
-    public BoardDto selectBoardDetail(int boardIdx) throws Exception {
-//        int i = 10 / 0;
-        boardMapper.updateHitCount(boardIdx); // 조회수 증가
-        BoardDto board = boardMapper.selectBoardDetail(boardIdx); // 게시판 상세 데이터
+    public BoardDto selectBoardDetail(int boardIdx) throws Exception{
+        BoardDto board = boardMapper.selectBoardDetail(boardIdx);
+        List<BoardFileDto> fileList = boardMapper.selectBoardFileList(boardIdx);
+        board.setFileList(fileList);
+
+        boardMapper.updateHitCount(boardIdx);
+
         return board;
     }
 
@@ -77,4 +60,8 @@ public class BoardServiceImpl implements BoardService {
         boardMapper.deleteBoard(boardIdx);
     }
 
+    @Override
+    public BoardFileDto selectBoardFileInformation(int idx, int boardIdx) throws Exception {
+        return boardMapper.selectBoardFileInformation(idx, boardIdx);
+    }
 }
